@@ -1,7 +1,8 @@
 # AZ_ST7735S
 Circuit Python using a Raspberry Pi Pico with an AZ Delivery 1.77" SPI TFT 128x160 screen
 
-This is more for my own memory aid than any serious coding.  
+This is more for my own memory aid than any serious coding.  I am not a python or micro/embedded systems programmer
+by a very long way!
 
 This is a small set of Circuit Python files to get a TFT screen working with the original Raspberry Pi Pico
 

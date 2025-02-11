@@ -121,8 +121,8 @@ while True:
     #Finished so hide this screen
     temperatureScreen.hideAll()
     temperatureScreen.cycleBackgroundColour()
+    temperatureScreen.toggleFan() #just for fan example, swap this based on sensor information
     
     #Next Screen
-    temperatureScreen.toggleFan()
     tft.setBackgroundImage(slideshowScreen.getBackground())
     time.sleep(10) #not doing anything useful here so just sleep

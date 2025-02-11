@@ -1,11 +1,6 @@
 # SlideShowScreen.py
-# Sets up a landscape screen 160 x 128
-#---------------------
-# | TITLE       temp  |
-# | TITLE       humid |
-# |             fan   |
-# | DECORATION        |
-# ---------------------
+# Sets up a landscape screen 160 x 128 with a full screen image
+# based on indexed bmps stored in /images/slideshow (by default)
 import random, os
 
 class SlideShowScreen:

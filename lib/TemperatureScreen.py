@@ -36,12 +36,12 @@ class TemperatureScreen:
     __Group = None
     __backgroundColours = [
         0x000000,#black
-        0xFF0000,#red
-        0x00FF00,#green
-        0x0000FF,#blue
-        0xFFFF00,#yellow
-        0x00FFFF,#light_blue
-        0xFF00FF #purple
+        0x880000,#red
+        0x008800,#green
+        0x000088,#blue
+        0x888800,#yellow
+        0x008888,#light_blue
+        0x880088 #purple
     ]
     __colourIndex = 0
     
@@ -125,7 +125,13 @@ class TemperatureScreen:
     def setFanOff(self):
         self.__fanOn = False
         self.__fanLabel.changeText("Off")
-    
+        
+    def toggleFan(self):
+        if self.__fanOn == True:
+            self.setFanOff()
+        else:
+            self.setFanOn()
+            
     def setHumidity(self, humidity):
         if self.__humidity != humidity:
             self.__humidity = humidity
@@ -156,7 +162,7 @@ class TemperatureScreen:
     def setHumidityOK(self):
         self.__humidityLabel.changePicture(2)
     
-    def animate():
+    def animate(self):
         #Change fan picture if we're turned to on
         if self.__fanOn:
             self.__fanLabel.togglePicture()

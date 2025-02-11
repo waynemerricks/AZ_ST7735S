@@ -10,6 +10,12 @@ import os, microcontroller, gc, random
 import time
 
 # ****************************
+# *    SETTING VARIABLES     *
+# ****************************
+TEN_SECONDS = 10000 #10 seconds in millis for use with time compare
+ANIMATE_DELAY = 250 #time between animate calls for screen items in millis 250 = 4 frames/updates per second
+
+# ****************************
 # *       STARTUP CODE       *
 # ****************************
 # This isn't needed but it is nice to see if things are actually loading
@@ -30,6 +36,16 @@ def free(full=False):
   if not full: return P
   else : return ('Total:{0} Free:{1} ({2})'.format(T,F,P))
   
+def convertToMillis(nanoSeconds):
+    return nanoSeconds // 1000000 #divide discarding remainder
+
+# Get system uptime now in millis (we use nanoseconds because the normal time
+# in millis is only accurate ish for the first couple of hours the system is
+# turned on)
+# @see https://learn.adafruit.com/clue-sensor-plotter-circuitpython/time-in-circuitpython#time-dot-monotonic-3060336.
+def getNow():
+    return convertToMillis(time.monotonic_ns())
+
 # ****************************
 # *   SENSOR READING CODE    *
 # ****************************
@@ -75,12 +91,33 @@ slideshowScreen = SlideShowScreen()
 while True:
     print("Free Memory: " + free(False))
     
+    # Each "screen" will stay on for 10 seconds but we need to move away from time.sleep
+    # in order to animate/do other things while waiting
+    startTime = getNow()
+    lastAnimate = startTime
     tft.setBackgroundColour(temperatureScreen.getBackgroundColour())
     temperatureScreen.showAll()
-    time.sleep(10)
+    
+    #Keep showing for 10 seconds
+    
+    while getNow() - startTime < TEN_SECONDS:
+        #Do stuff
+        if getNow() - lastAnimate >= ANIMATE_DELAY:
+            #Animate /update elements
+            temperatureScreen.setTemperature(readTemperatureSensor())
+            temperatureScreen.setHumidity(readHumiditySensor())
+            temperatureScreen.cycleBackgroundColour()
+            temperatureScreen.animate()
+            
+            #set lastAnimate
+            lastAnimate = getNow()
+            
+        time.sleep(0.1) #sleep for 1/10 second so we don't peg the CPU while waiting on this screen
+    
+    #Finished so hide this screen
     temperatureScreen.hideAll()
-    temperatureScreen.setTemperature(readTemperatureSensor())
-    temperatureScreen.setHumidity(readHumiditySensor())
-    temperatureScreen.cycleBackgroundColour()
+    
+    #Next Screen
+    temperatureScreen.toggleFan()
     tft.setBackgroundImage(slideshowScreen.getBackground())
-    time.sleep(10)
+    time.sleep(10) #not doing anything useful here so just sleep

@@ -14,6 +14,7 @@ import time
 # ****************************
 TEN_SECONDS = 10000 #10 seconds in millis for use with time compare
 ANIMATE_DELAY = 250 #time between animate calls for screen items in millis 250 = 4 frames/updates per second
+SENSOR_DELAY = 2000 #2 seconds in millis for time between sensor updates
 
 # ****************************
 # *       STARTUP CODE       *
@@ -95,27 +96,31 @@ while True:
     # in order to animate/do other things while waiting
     startTime = getNow()
     lastAnimate = startTime
+    lastSensorUpdate = startTime
+    
     tft.setBackgroundColour(temperatureScreen.getBackgroundColour())
     temperatureScreen.showAll()
     
     #Keep showing for 10 seconds
     
     while getNow() - startTime < TEN_SECONDS:
-        #Do stuff
+        
+        #Check if we need to animate
         if getNow() - lastAnimate >= ANIMATE_DELAY:
-            #Animate /update elements
+            temperatureScreen.animate()
+            lastAnimate = getNow()
+        
+        #Check/Update sensors
+        if getNow() - lastSensorUpdate >= SENSOR_DELAY:
             temperatureScreen.setTemperature(readTemperatureSensor())
             temperatureScreen.setHumidity(readHumiditySensor())
-            temperatureScreen.cycleBackgroundColour()
-            temperatureScreen.animate()
-            
-            #set lastAnimate
-            lastAnimate = getNow()
+            lastSensorUpdate = getNow()
             
         time.sleep(0.1) #sleep for 1/10 second so we don't peg the CPU while waiting on this screen
     
     #Finished so hide this screen
     temperatureScreen.hideAll()
+    temperatureScreen.cycleBackgroundColour()
     
     #Next Screen
     temperatureScreen.toggleFan()

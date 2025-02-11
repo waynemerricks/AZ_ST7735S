@@ -6,6 +6,8 @@ by a very long way!
 
 This is a small set of Circuit Python files to get a TFT screen working with the original Raspberry Pi Pico
 
+![pico-tft-example](https://github.com/user-attachments/assets/38c40685-3ae8-4ca8-9446-962fccebbb02)
+
 It uses an AZ Delivery 1.77" SPI TFT (ST7735S / ST7735), google didn't help too much with the documentation for this
 so this is just my cobbled together list of things to get it working as of 10/02/2025.
 

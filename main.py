@@ -12,9 +12,10 @@ import time
 # ****************************
 # *    SETTING VARIABLES     *
 # ****************************
-TEN_SECONDS = 10000 #10 seconds in millis for use with time compare
-ANIMATE_DELAY = 250 #time between animate calls for screen items in millis 250 = 4 frames/updates per second
-SENSOR_DELAY = 2000 #2 seconds in millis for time between sensor updates
+TEN_SECONDS   = 10000 #10 seconds in millis for use with time compare
+ANIMATE_DELAY = 250   #time between animate calls for screen items in millis 250 = 4 frames/updates per second
+SENSOR_DELAY  = 2000  #2 seconds in millis for time between sensor updates
+PORTRAIT      = False  #Set to False for landscape
 
 # ****************************
 # *       STARTUP CODE       *
@@ -65,7 +66,12 @@ def readHumiditySensor():
 # Setup the screen rotated to be landscape
 print("Initialising Screen")
 tft = AZ_ST7735S()
-tft.initialiseScreen(90) #0 for portrait, in theory 180 for upside down, 270 for landscape in other direction
+
+if PORTRAIT:
+    tft.initialiseScreen(0) #0 for portrait, in theory 180 for upside down, 270 for landscape in other direction
+else:
+    tft.initialiseScreen(90) #0 for portrait, in theory 180 for upside down, 270 for landscape in other direction
+    
 print(f"Screen Resolution: {tft.getWidth()} x {tft.getHeight()} @ {tft.getOrientation()} degrees")
 
 
@@ -75,6 +81,13 @@ print(f"Screen Resolution: {tft.getWidth()} x {tft.getHeight()} @ {tft.getOrient
 
 #Setup Temperature Screen
 temperatureScreen = TemperatureScreen("Demo &\nText", "temperature_1-2.bmp", "humidity_1-2.bmp", "fan_1-2.bmp", "decoration.bmp")
+
+if PORTRAIT:
+    temperatureScreen.addAnimationLabel("anim.bmp")
+    temperatureScreen.setPortrait()
+else:
+    temperatureScreen.addAnimationLabel("anim.bmp", portrait = False)
+    
 temperatureScreen.hideAll()
 tft.getScreen().append(temperatureScreen.getGroup())
 
@@ -83,8 +96,12 @@ temperatureScreen.setTemperature(readTemperatureSensor())
 temperatureScreen.setHumidity(readHumiditySensor())
 
 #Setup SlideShow Screen
-slideshowScreen = SlideShowScreen()
+slideshowScreen = None
 
+if PORTRAIT:
+    slideshowScreen = SlideShowScreen(slideshowDir = "slideshow_portrait")
+else:
+    slideshowScreen = SlideShowScreen()
 
 # ****************************
 # *     MAIN SCREEN LOOP     *

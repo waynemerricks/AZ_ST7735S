@@ -28,6 +28,7 @@ class TemperatureScreen:
     __humidityLabel = None
     __decorationLabel = None
     __fanLabel = None
+    __animationLabel = None
     __temperature = ""
     __humidity = ""
     __background = None
@@ -50,7 +51,7 @@ class TemperatureScreen:
         self.__temperatureLabel = ImageLabel("99 C", 1, temperatureTileBMP, 105, 5, tileWidth = 20, tileHeight = 20, numberOfTiles = 3)
         self.__humidityLabel = ImageLabel("99 %", 1, humidityTileBMP, 105, 30, tileWidth = 20, tileHeight = 20, numberOfTiles = 3)
         self.__fanLabel = ImageLabel("Off ", 1, fanTileBMP, 105, 55, tileWidth = 20, tileHeight = 20)
-        self.__decorationLabel = ImageLabel("", 1, decorationBMP, 5, 90, tileWidth = 49, tileHeight = 40)
+        self.__decorationLabel = ImageLabel("", 1, decorationBMP, 0, 90, tileWidth = 49, tileHeight = 40)
         
         self.__background = self.__backgroundColours[0]
         
@@ -61,6 +62,25 @@ class TemperatureScreen:
         self.__Group.append(self.__fanLabel.getGroup())
         self.__Group.append(self.__decorationLabel.getGroup())
     
+    def addAnimationLabel(self, animationBMP, tileWidth = 100, tileHeight = 44, numberOfTiles = 17, portrait = True):
+        
+        if portrait:
+            self.__animationLabel = ImageLabel("", 1, animationBMP, 10, 110, numberOfTiles, tileWidth, tileHeight)
+        else:
+            self.__animationLabel = ImageLabel("", 1, animationBMP, 50, 90, numberOfTiles, tileWidth, tileHeight)
+        
+        self.__Group.append(self.__animationLabel.getGroup())
+        
+    def setPortrait(self):
+        self.__temperatureLabel.getGroup().x = 5
+        self.__temperatureLabel.getGroup().y = 60
+        self.__humidityLabel.getGroup().x = 80
+        self.__humidityLabel.getGroup().y = 60
+        self.__fanLabel.getGroup().x = 5
+        self.__fanLabel.getGroup().y = 85
+        self.__decorationLabel.getGroup().x = 74
+        self.__decorationLabel.getGroup().y = 12
+            
     def getGroup(self):
         return self.__Group
     
@@ -166,5 +186,8 @@ class TemperatureScreen:
         #Change fan picture if we're turned to on
         if self.__fanOn:
             self.__fanLabel.togglePicture()
+            
+        if self.__animationLabel != None:
+            self.__animationLabel.togglePicture()
             
 #test = TemperatureScreen("Example &\nTitle", "temperature_1-2.bmp", "humidity_1-2.bmp", "fan_1-2.bmp", "decoration.bmp")
